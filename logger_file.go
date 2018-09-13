@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"io"
+	`log`
 	"os"
 )
 
@@ -19,7 +19,7 @@ func checkFileIsExist(filename string) (bool) {
 	return exist;
 }
 
-func write2File(filePath, s string) error {
+func write2File(filePath, s string, l *log.Logger) error {
 	var f *os.File
 	var err1 error;
 	if checkFileIsExist(filePath) {
@@ -30,9 +30,7 @@ func write2File(filePath, s string) error {
 	if err1 != nil {
 		return err1
 	}
-	if _, err1 = io.WriteString(f, s+"\n"); err1 != nil {
-		return err1
-	}
+	l.SetOutput(f)
 
-	return nil
+	return l.Output(2, s+"\n")
 }

@@ -1,6 +1,7 @@
 package logger
 
 import (
+	`encoding/json`
 	`fmt`
 	_ `fmt`
 	`log`
@@ -24,6 +25,7 @@ func SetIsProd(prod bool) {
 
 func SetAppName(name string) {
 	logger.SetPrefix("[ " + name + " ] ")
+	prefix = name
 }
 
 func SetLogLevel(l int) {
@@ -33,7 +35,7 @@ func SetLogLevel(l int) {
 func Print(v ...interface{}) {
 	if isProd {
 		s := fmt.Sprintf("%s", v)
-		write2File("./logs/"+getYearMonthDay()+".log", s)
+		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
 		logger.Print(v)
 	}
@@ -42,7 +44,7 @@ func Print(v ...interface{}) {
 func Println(v ...interface{}) {
 	if isProd {
 		s := fmt.Sprintf("%s", v)
-		write2File("./logs/"+getYearMonthDay()+".log", s)
+		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
 		logger.Println(v)
 	}
@@ -51,7 +53,7 @@ func Println(v ...interface{}) {
 func Printf(f string, v ...interface{}) {
 	if isProd {
 		s := fmt.Sprintf(f, v)
-		write2File("./logs/"+getYearMonthDay()+".log", s)
+		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
 		logger.Printf(f, v)
 	}
@@ -60,7 +62,7 @@ func Printf(f string, v ...interface{}) {
 func Fatal(v ...interface{}) {
 	if isProd {
 		s := fmt.Sprintf("%s", v)
-		write2File("./logs/"+getYearMonthDay()+".log", s)
+		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
 		logger.Fatal(v)
 	}
@@ -69,7 +71,7 @@ func Fatal(v ...interface{}) {
 func Fatalln(v ...interface{}) {
 	if isProd {
 		s := fmt.Sprintf("%s", v)
-		write2File("./logs/"+getYearMonthDay()+".log", s)
+		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
 		logger.Fatalln(v)
 	}
@@ -78,7 +80,7 @@ func Fatalln(v ...interface{}) {
 func Fatalf(f string, v ...interface{}) {
 	if isProd {
 		s := fmt.Sprintf(f, v)
-		write2File("./logs/"+getYearMonthDay()+".log", s)
+		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
 		logger.Fatalf(f, v)
 	}
@@ -90,45 +92,84 @@ func Debug(f string, v ...interface{}) {
 	}
 	if isProd {
 		s := fmt.Sprintf(f, v)
-		write2File("./logs/"+getYearMonthDay()+".log", s)
+		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
 		logger.Printf("[ debug ] "+f, v)
 	}
 }
 
-func Info(f string, v ...interface{}) {
+func Infof(f string, v ...interface{}) {
 	if level > 1 {
 		return
 	}
 	if isProd {
 		s := fmt.Sprintf(f, v)
-		write2File("./logs/"+getYearMonthDay()+".log", s)
+		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
 		logger.Printf("[ info ] "+f, v)
 	}
 }
 
-func Warn(f string, v ...interface{}) {
+func Info(v...interface{})  {
+	if level > 1 {
+		return
+	}
+	data,_ := json.Marshal(v)
+	s := string(data)
+	if isProd {
+		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
+	} else {
+		logger.Printf("[ info ] "+ s)
+	}
+}
+
+func Warnf(f string, v ...interface{}) {
 	if level > 2 {
 		return
 	}
 	if isProd {
 		s := fmt.Sprintf(f, v)
-		write2File("./logs/"+getYearMonthDay()+".log", s)
+		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
 		logger.Printf("[ warn ] "+f, v)
 	}
 }
 
-func Error(f string, v ...interface{}) {
+func Warn(v...interface{})  {
+	if level > 2 {
+		return
+	}
+	data,_ := json.Marshal(v)
+	s := string(data)
+	if isProd {
+		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
+	} else {
+		logger.Printf("[ warn ] "+s)
+	}
+}
+
+func Errorf(f string, v ...interface{}) {
 	if level > 3 {
 		return
 	}
 	if isProd {
 		s := fmt.Sprintf(f, v)
-		write2File("./logs/"+getYearMonthDay()+".log", s)
+		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
 		logger.Printf("[ error ] "+f, v)
+	}
+}
+
+func Error(v...interface{})  {
+	if level > 3 {
+		return
+	}
+	data,_ := json.Marshal(v)
+	s := string(data)
+	if isProd {
+		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
+	} else {
+		logger.Printf("[ error ] "+s)
 	}
 }
 
