@@ -14,7 +14,7 @@ func init() {
 }
 
 func SetAppName(name string) {
-	logger.SetPrefix("[ " + name + " ]")
+	logger.SetPrefix("[ " + name + " ] ")
 }
 
 func SetLogLevel(l int)  {
@@ -49,26 +49,26 @@ func Debug(f string, v ...interface{}) {
 	if level > 0 {
 		return
 	}
-	logger.Printf("[ debug ]"+f, v)
+	logger.Printf("[ debug ] "+f, v)
 }
 
 func Info(f string, v ...interface{}) {
 	if level > 1 {
 		return
 	}
-	logger.Printf("[ info ]"+f, v)
+	logger.Printf("[ info ] "+f, v)
 }
 
 func Warn(f string, v ...interface{}) {
 	if level > 2 {
 		return
 	}
-	logger.Printf("[ warn ]"+f, v)
+	logger.Printf("[ warn ] "+f, v)
 }
 
 func Error(f string, v ...interface{}) {
 	if level > 3 {
 		return
 	}
-	logger.Printf("[ error ]"+f, v)
+	logger.Printf("[ error ] "+f, v)
 }
