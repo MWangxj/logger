@@ -1,7 +1,6 @@
 package logger
 
 import (
-	`os`
 	`testing`
 )
 
@@ -18,7 +17,7 @@ func TestLogError(t *testing.T)  {
 }
 
 func TestWrite2File(t *testing.T)  {
-	err := write2File("./test.log","wangxianjin12312")
+	err := write2File("./test.log","wangxianjin12312",logger)
 	if err != nil {
 		t.Fatal("fail")
 		t.Fatalf("%s",err.Error())
@@ -31,17 +30,11 @@ func TestYearMonthDay(t *testing.T)  {
 }
 
 func TestLogger2File(t *testing.T)  {
-	logger.Output(2,"asdfsaf")
-	var f *os.File
-	var err1 error;
-	if checkFileIsExist("./test.log") {
-		f, err1 = os.OpenFile("./test.log", os.O_RDWR|os.O_APPEND, 0666)
-	} else {
-		f, err1 = os.Create("./test.log")
-	}
-	if err1 != nil {
-		return
-	}
-	logger.SetOutput(f)
-	logger.Output(2,"sdfafs")
+	write2File("./test/test.log","123",logger)
+}
+
+func TestSplitPath(t *testing.T)  {
+	path := "/user/local/log.test"
+	dir := getPathDir(path)
+	t.Log("----->"+dir)
 }

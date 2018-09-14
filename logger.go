@@ -8,6 +8,7 @@ import (
 	`os`
 	`strconv`
 	`time`
+	`unsafe`
 )
 
 var logger *log.Logger
@@ -33,20 +34,20 @@ func SetLogLevel(l int) {
 }
 
 func Print(v ...interface{}) {
+	s := formatValue(v)
 	if isProd {
-		s := fmt.Sprintf("%s", v)
 		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
-		logger.Print(v)
+		logger.Print(s)
 	}
 }
 
 func Println(v ...interface{}) {
+	s := formatValue(v)
 	if isProd {
-		s := fmt.Sprintf("%s", v)
 		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
-		logger.Println(v)
+		logger.Println(s)
 	}
 }
 
@@ -60,20 +61,20 @@ func Printf(f string, v ...interface{}) {
 }
 
 func Fatal(v ...interface{}) {
+	s := formatValue(v)
 	if isProd {
-		s := fmt.Sprintf("%s", v)
 		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
-		logger.Fatal(v)
+		logger.Fatal(s)
 	}
 }
 
 func Fatalln(v ...interface{}) {
+	s := formatValue(v)
 	if isProd {
-		s := fmt.Sprintf("%s", v)
 		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
-		logger.Fatalln(v)
+		logger.Fatalln(s)
 	}
 }
 
@@ -110,16 +111,15 @@ func Infof(f string, v ...interface{}) {
 	}
 }
 
-func Info(v...interface{})  {
+func Info(v ...interface{}) {
 	if level > 1 {
 		return
 	}
-	data,_ := json.Marshal(v)
-	s := string(data)
+	s := formatValue(v)
 	if isProd {
 		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
-		logger.Printf("[ info ] "+ s)
+		logger.Printf("[ info ] " + s)
 	}
 }
 
@@ -135,16 +135,15 @@ func Warnf(f string, v ...interface{}) {
 	}
 }
 
-func Warn(v...interface{})  {
+func Warn(v ...interface{}) {
 	if level > 2 {
 		return
 	}
-	data,_ := json.Marshal(v)
-	s := string(data)
+	s := formatValue(v)
 	if isProd {
 		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
-		logger.Printf("[ warn ] "+s)
+		logger.Printf("[ warn ] " + s)
 	}
 }
 
@@ -160,16 +159,15 @@ func Errorf(f string, v ...interface{}) {
 	}
 }
 
-func Error(v...interface{})  {
+func Error(v ...interface{}) {
 	if level > 3 {
 		return
 	}
-	data,_ := json.Marshal(v)
-	s := string(data)
+	s := formatValue(v)
 	if isProd {
 		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
-		logger.Printf("[ error ] "+s)
+		logger.Printf("[ error ] " + s)
 	}
 }
 
@@ -187,4 +185,26 @@ func month2string(m time.Month) string {
 		return "0" + strconv.Itoa(d)
 	}
 	return strconv.Itoa(d)
+}
+
+// string2bytes String to bytes
+func string2bytes(s string) []byte {
+	x := (*[2]uintptr)(unsafe.Pointer(&s))
+	h := [3]uintptr{x[0], x[1], x[1]}
+	return *(*[]byte)(unsafe.Pointer(&h))
+}
+
+// bytes2string Bytes to string
+func bytes2string(b []byte) string {
+	h := (*[3]uintptr)(unsafe.Pointer(&b))
+	x := [2]uintptr{h[0], h[1]}
+	return *(*string)(unsafe.Pointer(&x))
+}
+
+func formatValue(v ...interface{}) string {
+	data, err := json.Marshal(v)
+	if err != nil {
+		return ""
+	}
+	return bytes2string(data)
 }

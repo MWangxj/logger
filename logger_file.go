@@ -3,6 +3,7 @@ package logger
 import (
 	`log`
 	"os"
+	`strings`
 )
 
 func check(e error) {
@@ -25,6 +26,9 @@ func write2File(filePath, s string, l *log.Logger) error {
 	if checkFileIsExist(filePath) {
 		f, err1 = os.OpenFile(filePath, os.O_RDWR|os.O_APPEND, 0666)
 	} else {
+		if err1 = os.MkdirAll(getPathDir(filePath), 0700); err1 != nil {
+			return err1
+		}
 		f, err1 = os.Create(filePath)
 	}
 	if err1 != nil {
@@ -33,4 +37,9 @@ func write2File(filePath, s string, l *log.Logger) error {
 	l.SetOutput(f)
 
 	return l.Output(2, s+"\n")
+}
+
+func getPathDir(filePath string) string {
+	s := strings.Split(filePath, "/")
+	return strings.Join(s[:len(s)-1], "/")
 }
