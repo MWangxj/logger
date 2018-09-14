@@ -5,18 +5,19 @@ import (
 	json "github.com/json-iterator/go"
 	`log`
 	`os`
+	`runtime`
 	`strconv`
 	`time`
 	`unsafe`
 )
 
 var logger *log.Logger
-var prefix string
+var appName string
 var level int
 var isProd bool
 
 func init() {
-	logger = log.New(os.Stdout, prefix, log.Lshortfile|log.Ldate|log.Ltime)
+	logger = log.New(os.Stdout, appName, log.Lshortfile|log.Ldate|log.Ltime) // log.Lshortfile|log.Ldate|log.Ltime
 }
 
 func SetIsProd(prod bool) {
@@ -24,8 +25,9 @@ func SetIsProd(prod bool) {
 }
 
 func SetAppName(name string) {
-	logger.SetPrefix("[ " + name + " ] ")
-	prefix = name
+	name = "[ " + name + " ] "
+	appName = name
+	logger.SetPrefix(name)
 }
 
 func SetLogLevel(l int) {
@@ -37,7 +39,7 @@ func Print(v ...interface{}) {
 	if isProd {
 		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
-		logger.Print(s)
+		logger.Output(2,s)
 	}
 }
 
@@ -46,16 +48,16 @@ func Println(v ...interface{}) {
 	if isProd {
 		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
-		logger.Println(s)
+		logger.Output(2,s+"\n")
 	}
 }
 
 func Printf(f string, v ...interface{}) {
+	s := fmt.Sprintf(f, v...)
 	if isProd {
-		s := fmt.Sprintf(f, v)
 		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
-		logger.Printf(f, v)
+		logger.Output(2,s+"\n")
 	}
 }
 
@@ -64,7 +66,7 @@ func Fatal(v ...interface{}) {
 	if isProd {
 		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
-		logger.Fatal(s)
+		logger.Output(2,s+"\n")
 	}
 }
 
@@ -73,16 +75,16 @@ func Fatalln(v ...interface{}) {
 	if isProd {
 		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
-		logger.Fatalln(s)
+		logger.Output(2,s+"\n")
 	}
 }
 
 func Fatalf(f string, v ...interface{}) {
+	s := fmt.Sprintf(f, v...)
 	if isProd {
-		s := fmt.Sprintf(f, v)
 		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
-		logger.Fatalf(f, v)
+		logger.Output(2,s+"\n")
 	}
 }
 
@@ -90,11 +92,11 @@ func Debug(f string, v ...interface{}) {
 	if level > 0 {
 		return
 	}
+	s := fmt.Sprintf(f, v...)
 	if isProd {
-		s := fmt.Sprintf(f, v)
 		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
-		logger.Printf("[ debug ] "+f, v)
+		logger.Output(2,"[ debug ] "+s+"\n")
 	}
 }
 
@@ -102,11 +104,11 @@ func Infof(f string, v ...interface{}) {
 	if level > 1 {
 		return
 	}
+	s := fmt.Sprintf(f, v...)
 	if isProd {
-		s := fmt.Sprintf(f, v)
 		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
-		logger.Printf("[ info ] "+f, v)
+		logger.Output(2,"[ info ] "+s+"\n")
 	}
 }
 
@@ -118,7 +120,7 @@ func Info(v ...interface{}) {
 	if isProd {
 		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
-		logger.Printf("[ info ] " + s)
+		logger.Output(2,"[ info ] "+s+"\n")
 	}
 }
 
@@ -126,11 +128,11 @@ func Warnf(f string, v ...interface{}) {
 	if level > 2 {
 		return
 	}
+	s := fmt.Sprintf(f, v...)
 	if isProd {
-		s := fmt.Sprintf(f, v)
 		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
-		logger.Printf("[ warn ] "+f, v)
+		logger.Output(2,"[ warn ] "+s+"\n")
 	}
 }
 
@@ -142,7 +144,7 @@ func Warn(v ...interface{}) {
 	if isProd {
 		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
-		logger.Printf("[ warn ] " + s)
+		logger.Output(2,"[ warn ] "+s+"\n")
 	}
 }
 
@@ -150,11 +152,11 @@ func Errorf(f string, v ...interface{}) {
 	if level > 3 {
 		return
 	}
+	s := fmt.Sprintf(f, v...)
 	if isProd {
-		s := fmt.Sprintf(f, v)
 		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
-		logger.Printf("[ error ] "+f, v)
+		logger.Output(2,"[ error ] "+s+"\n")
 	}
 }
 
@@ -166,7 +168,7 @@ func Error(v ...interface{}) {
 	if isProd {
 		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
 	} else {
-		logger.Printf("[ error ] " + s)
+		logger.Output(2,"[ error ] "+s+"\n")
 	}
 }
 
@@ -175,7 +177,7 @@ func getYearMonthDay() string {
 	y := n.Year()
 	m := n.Month()
 	d := n.Day()
-	return prefix + strconv.Itoa(y) + month2string(m) + strconv.Itoa(d)
+	return appName + strconv.Itoa(y) + month2string(m) + strconv.Itoa(d)
 }
 
 func month2string(m time.Month) string {
@@ -200,10 +202,16 @@ func bytes2string(b []byte) string {
 	return *(*string)(unsafe.Pointer(&x))
 }
 
-func formatValue(v ...interface{}) string {
+func formatValue(v interface{}) string {
 	data, err := json.Marshal(v)
 	if err != nil {
 		return ""
 	}
 	return bytes2string(data)
+}
+
+func getCallerInfo() string {
+	pc, f, l, _ := runtime.Caller(2)
+	fn :=runtime.FuncForPC(pc).Name()
+	return f + " " + strconv.Itoa(l) + " "+fn+" "
 }

@@ -36,7 +36,7 @@ func write2File(filePath, s string, l *log.Logger) error {
 	}
 	l.SetOutput(f)
 
-	return l.Output(2, s+"\n")
+	return l.Output(3, s+"\n")
 }
 
 func getPathDir(filePath string) string {
