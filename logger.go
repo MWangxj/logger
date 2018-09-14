@@ -1,9 +1,8 @@
 package logger
 
 import (
-	`encoding/json`
 	`fmt`
-	_ `fmt`
+	json "github.com/json-iterator/go"
 	`log`
 	`os`
 	`strconv`
