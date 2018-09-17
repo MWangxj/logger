@@ -18,6 +18,7 @@ var isProd bool
 
 func init() {
 	logger = log.New(os.Stdout, appName, log.Lshortfile|log.Ldate|log.Ltime) // log.Lshortfile|log.Ldate|log.Ltime
+	appName = "[ default appName ] "
 }
 
 func SetIsProd(prod bool) {
@@ -176,6 +177,6 @@ func doOutputWithPrefix(isProd bool,s,p string,l *log.Logger)  {
 	if isProd {
 		write2File("./logs/"+getYearMonthDay()+".log", "[ "+p+" ] "+s, l)
 	} else {
-		l.Output(2, "[ "+p+" ] "+s+"\n")
+		l.Output(3, "[ "+p+" ] "+s+"\n")
 	}
 }
