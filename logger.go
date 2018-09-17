@@ -36,56 +36,32 @@ func SetLogLevel(l int) {
 
 func Print(v ...interface{}) {
 	s := formatValue(v)
-	if isProd {
-		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
-	} else {
-		logger.Output(2,s)
-	}
+	doOutput(isProd,s,logger)
 }
 
 func Println(v ...interface{}) {
 	s := formatValue(v)
-	if isProd {
-		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
-	} else {
-		logger.Output(2,s+"\n")
-	}
+	doOutput(isProd,s,logger)
 }
 
 func Printf(f string, v ...interface{}) {
 	s := fmt.Sprintf(f, v...)
-	if isProd {
-		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
-	} else {
-		logger.Output(2,s+"\n")
-	}
+	doOutput(isProd,s,logger)
 }
 
 func Fatal(v ...interface{}) {
 	s := formatValue(v)
-	if isProd {
-		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
-	} else {
-		logger.Output(2,s+"\n")
-	}
+	doOutput(isProd,s,logger)
 }
 
 func Fatalln(v ...interface{}) {
 	s := formatValue(v)
-	if isProd {
-		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
-	} else {
-		logger.Output(2,s+"\n")
-	}
+	doOutput(isProd,s,logger)
 }
 
 func Fatalf(f string, v ...interface{}) {
 	s := fmt.Sprintf(f, v...)
-	if isProd {
-		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
-	} else {
-		logger.Output(2,s+"\n")
-	}
+	doOutput(isProd,s,logger)
 }
 
 func Debug(f string, v ...interface{}) {
@@ -93,11 +69,7 @@ func Debug(f string, v ...interface{}) {
 		return
 	}
 	s := fmt.Sprintf(f, v...)
-	if isProd {
-		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
-	} else {
-		logger.Output(2,"[ debug ] "+s+"\n")
-	}
+	doOutputWithPrefix(isProd,s,"[ debug ]",logger)
 }
 
 func Infof(f string, v ...interface{}) {
@@ -105,11 +77,7 @@ func Infof(f string, v ...interface{}) {
 		return
 	}
 	s := fmt.Sprintf(f, v...)
-	if isProd {
-		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
-	} else {
-		logger.Output(2,"[ info ] "+s+"\n")
-	}
+	doOutputWithPrefix(isProd,s,"[ info ]",logger)
 }
 
 func Info(v ...interface{}) {
@@ -117,11 +85,7 @@ func Info(v ...interface{}) {
 		return
 	}
 	s := formatValue(v)
-	if isProd {
-		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
-	} else {
-		logger.Output(2,"[ info ] "+s+"\n")
-	}
+	doOutputWithPrefix(isProd,s,"[ info ]",logger)
 }
 
 func Warnf(f string, v ...interface{}) {
@@ -129,11 +93,7 @@ func Warnf(f string, v ...interface{}) {
 		return
 	}
 	s := fmt.Sprintf(f, v...)
-	if isProd {
-		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
-	} else {
-		logger.Output(2,"[ warn ] "+s+"\n")
-	}
+	doOutputWithPrefix(isProd,s,"[ warn ]",logger)
 }
 
 func Warn(v ...interface{}) {
@@ -141,11 +101,7 @@ func Warn(v ...interface{}) {
 		return
 	}
 	s := formatValue(v)
-	if isProd {
-		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
-	} else {
-		logger.Output(2,"[ warn ] "+s+"\n")
-	}
+	doOutputWithPrefix(isProd,s,"[ warn ]",logger)
 }
 
 func Errorf(f string, v ...interface{}) {
@@ -153,11 +109,7 @@ func Errorf(f string, v ...interface{}) {
 		return
 	}
 	s := fmt.Sprintf(f, v...)
-	if isProd {
-		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
-	} else {
-		logger.Output(2,"[ error ] "+s+"\n")
-	}
+	doOutputWithPrefix(isProd,s,"[ error ]",logger)
 }
 
 func Error(v ...interface{}) {
@@ -165,11 +117,7 @@ func Error(v ...interface{}) {
 		return
 	}
 	s := formatValue(v)
-	if isProd {
-		write2File("./logs/"+getYearMonthDay()+".log", s, logger)
-	} else {
-		logger.Output(2,"[ error ] "+s+"\n")
-	}
+	doOutputWithPrefix(isProd,s,"[ error ]",logger)
 }
 
 func getYearMonthDay() string {
@@ -212,6 +160,22 @@ func formatValue(v interface{}) string {
 
 func getCallerInfo() string {
 	pc, f, l, _ := runtime.Caller(2)
-	fn :=runtime.FuncForPC(pc).Name()
-	return f + " " + strconv.Itoa(l) + " "+fn+" "
+	fn := runtime.FuncForPC(pc).Name()
+	return f + " " + strconv.Itoa(l) + " " + fn + " "
+}
+
+func doOutput(isProd bool,s string,l *log.Logger)  {
+	if isProd {
+		write2File("./logs/"+getYearMonthDay()+".log", s, l)
+	} else {
+		l.Output(2, s+"\n")
+	}
+}
+
+func doOutputWithPrefix(isProd bool,s,p string,l *log.Logger)  {
+	if isProd {
+		write2File("./logs/"+getYearMonthDay()+".log", "[ "+p+" ] "+s, l)
+	} else {
+		l.Output(2, "[ "+p+" ] "+s+"\n")
+	}
 }
