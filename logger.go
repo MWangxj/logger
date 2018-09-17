@@ -21,50 +21,60 @@ func init() {
 	appName = "[ default appName ] "
 }
 
+// SetIsProd 设置是否生产环境
 func SetIsProd(prod bool) {
 	isProd = prod
 }
 
+// SetAppName 设置app名称 日志打印的第一个
 func SetAppName(name string) {
 	name = "[ " + name + " ] "
 	appName = name
 	logger.SetPrefix(name)
 }
 
+// SetLogLevel 设置日志等级 1 debug信息不输出 2 info信息不输出 3 警告信息不输出 4 全都不输出
 func SetLogLevel(l int) {
 	level = l
 }
 
+// Print 打印结构
 func Print(v ...interface{}) {
 	s := formatValue(v)
 	doOutput(isProd,s,logger)
 }
 
+// Println 打印结构
 func Println(v ...interface{}) {
 	s := formatValue(v)
 	doOutput(isProd,s,logger)
 }
 
+// Printf 格式化打印
 func Printf(f string, v ...interface{}) {
 	s := fmt.Sprintf(f, v...)
 	doOutput(isProd,s,logger)
 }
 
+// Fatal 失败
 func Fatal(v ...interface{}) {
 	s := formatValue(v)
 	doOutput(isProd,s,logger)
 }
 
+// Fatalln 失败
 func Fatalln(v ...interface{}) {
 	s := formatValue(v)
 	doOutput(isProd,s,logger)
 }
 
+// Fatalf 格式化输出失败
 func Fatalf(f string, v ...interface{}) {
 	s := fmt.Sprintf(f, v...)
 	doOutput(isProd,s,logger)
 }
 
+// Debug debug信息输出
 func Debug(f string, v ...interface{}) {
 	if level > 0 {
 		return
@@ -73,6 +83,7 @@ func Debug(f string, v ...interface{}) {
 	doOutputWithPrefix(isProd,s,"debug",logger)
 }
 
+// Infof info信息输出
 func Infof(f string, v ...interface{}) {
 	if level > 1 {
 		return
@@ -81,6 +92,7 @@ func Infof(f string, v ...interface{}) {
 	doOutputWithPrefix(isProd,s,"info",logger)
 }
 
+// Info info信息
 func Info(v ...interface{}) {
 	if level > 1 {
 		return
@@ -89,6 +101,7 @@ func Info(v ...interface{}) {
 	doOutputWithPrefix(isProd,s,"info",logger)
 }
 
+// Warnf 警告信息
 func Warnf(f string, v ...interface{}) {
 	if level > 2 {
 		return
@@ -97,6 +110,7 @@ func Warnf(f string, v ...interface{}) {
 	doOutputWithPrefix(isProd,s,"warn",logger)
 }
 
+// Warn 警告
 func Warn(v ...interface{}) {
 	if level > 2 {
 		return
@@ -105,6 +119,7 @@ func Warn(v ...interface{}) {
 	doOutputWithPrefix(isProd,s,"warn",logger)
 }
 
+// Errorf 错误信息格式化输出
 func Errorf(f string, v ...interface{}) {
 	if level > 3 {
 		return
@@ -113,6 +128,7 @@ func Errorf(f string, v ...interface{}) {
 	doOutputWithPrefix(isProd,s,"error",logger)
 }
 
+// Error 错误
 func Error(v ...interface{}) {
 	if level > 3 {
 		return
