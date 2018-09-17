@@ -69,7 +69,7 @@ func Debug(f string, v ...interface{}) {
 		return
 	}
 	s := fmt.Sprintf(f, v...)
-	doOutputWithPrefix(isProd,s,"[ debug ]",logger)
+	doOutputWithPrefix(isProd,s,"debug",logger)
 }
 
 func Infof(f string, v ...interface{}) {
@@ -77,7 +77,7 @@ func Infof(f string, v ...interface{}) {
 		return
 	}
 	s := fmt.Sprintf(f, v...)
-	doOutputWithPrefix(isProd,s,"[ info ]",logger)
+	doOutputWithPrefix(isProd,s,"info",logger)
 }
 
 func Info(v ...interface{}) {
@@ -85,7 +85,7 @@ func Info(v ...interface{}) {
 		return
 	}
 	s := formatValue(v)
-	doOutputWithPrefix(isProd,s,"[ info ]",logger)
+	doOutputWithPrefix(isProd,s,"info",logger)
 }
 
 func Warnf(f string, v ...interface{}) {
@@ -93,7 +93,7 @@ func Warnf(f string, v ...interface{}) {
 		return
 	}
 	s := fmt.Sprintf(f, v...)
-	doOutputWithPrefix(isProd,s,"[ warn ]",logger)
+	doOutputWithPrefix(isProd,s,"warn",logger)
 }
 
 func Warn(v ...interface{}) {
@@ -101,7 +101,7 @@ func Warn(v ...interface{}) {
 		return
 	}
 	s := formatValue(v)
-	doOutputWithPrefix(isProd,s,"[ warn ]",logger)
+	doOutputWithPrefix(isProd,s,"warn",logger)
 }
 
 func Errorf(f string, v ...interface{}) {
@@ -109,7 +109,7 @@ func Errorf(f string, v ...interface{}) {
 		return
 	}
 	s := fmt.Sprintf(f, v...)
-	doOutputWithPrefix(isProd,s,"[ error ]",logger)
+	doOutputWithPrefix(isProd,s,"error",logger)
 }
 
 func Error(v ...interface{}) {
@@ -117,7 +117,7 @@ func Error(v ...interface{}) {
 		return
 	}
 	s := formatValue(v)
-	doOutputWithPrefix(isProd,s,"[ error ]",logger)
+	doOutputWithPrefix(isProd,s,"error",logger)
 }
 
 func getYearMonthDay() string {
