@@ -1,6 +1,7 @@
 package logger
 
 import (
+	`log`
 	`testing`
 )
 
@@ -38,3 +39,18 @@ func TestSplitPath(t *testing.T)  {
 	dir := getPathDir(path)
 	t.Log("----->"+dir)
 }
+
+type test struct {
+	Prepoty0 string `json:"prepoty_0"`
+	Prepoty1 string `json:"prepoty_1"`
+}
+
+func TestSerial(t *testing.T)  {
+	ts := &test{}
+	ts.Prepoty0 = "0"
+	ts.Prepoty1 = "1"
+	SetIsProd(true)
+	Print(ts)
+	log.Print(ts)
+}
+

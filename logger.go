@@ -185,7 +185,7 @@ func doOutput(isProd bool,s string,l *log.Logger)  {
 	if isProd {
 		write2File("./logs/"+getYearMonthDay()+".log", s, l)
 	} else {
-		l.Output(2, s+"\n")
+		l.Output(3, s+"\n")
 	}
 }
 
