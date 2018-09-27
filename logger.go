@@ -41,37 +41,37 @@ func SetLogLevel(l int) {
 // Print 打印结构
 func Print(v ...interface{}) {
 	s := formatValue(v)
-	doOutput(isProd,s,logger)
+	doOutput(isProd, s, logger)
 }
 
 // Println 打印结构
 func Println(v ...interface{}) {
 	s := formatValue(v)
-	doOutput(isProd,s,logger)
+	doOutput(isProd, s, logger)
 }
 
 // Printf 格式化打印
 func Printf(f string, v ...interface{}) {
 	s := fmt.Sprintf(f, v...)
-	doOutput(isProd,s,logger)
+	doOutput(isProd, s, logger)
 }
 
 // Fatal 失败
 func Fatal(v ...interface{}) {
 	s := formatValue(v)
-	doOutput(isProd,s,logger)
+	doOutput(isProd, s, logger)
 }
 
 // Fatalln 失败
 func Fatalln(v ...interface{}) {
 	s := formatValue(v)
-	doOutput(isProd,s,logger)
+	doOutput(isProd, s, logger)
 }
 
 // Fatalf 格式化输出失败
 func Fatalf(f string, v ...interface{}) {
 	s := fmt.Sprintf(f, v...)
-	doOutput(isProd,s,logger)
+	doOutput(isProd, s, logger)
 }
 
 // Debug debug信息输出
@@ -80,7 +80,7 @@ func Debug(f string, v ...interface{}) {
 		return
 	}
 	s := fmt.Sprintf(f, v...)
-	doOutputWithPrefix(isProd,s,"debug",logger)
+	doOutputWithPrefix(isProd, s, "debug", logger)
 }
 
 // Infof info信息输出
@@ -89,7 +89,7 @@ func Infof(f string, v ...interface{}) {
 		return
 	}
 	s := fmt.Sprintf(f, v...)
-	doOutputWithPrefix(isProd,s,"info",logger)
+	doOutputWithPrefix(isProd, s, "info", logger)
 }
 
 // Info info信息
@@ -98,7 +98,7 @@ func Info(v ...interface{}) {
 		return
 	}
 	s := formatValue(v)
-	doOutputWithPrefix(isProd,s,"info",logger)
+	doOutputWithPrefix(isProd, s, "info", logger)
 }
 
 // Warnf 警告信息
@@ -107,7 +107,7 @@ func Warnf(f string, v ...interface{}) {
 		return
 	}
 	s := fmt.Sprintf(f, v...)
-	doOutputWithPrefix(isProd,s,"warn",logger)
+	doOutputWithPrefix(isProd, s, "warn", logger)
 }
 
 // Warn 警告
@@ -116,7 +116,7 @@ func Warn(v ...interface{}) {
 		return
 	}
 	s := formatValue(v)
-	doOutputWithPrefix(isProd,s,"warn",logger)
+	doOutputWithPrefix(isProd, s, "warn", logger)
 }
 
 // Errorf 错误信息格式化输出
@@ -125,7 +125,7 @@ func Errorf(f string, v ...interface{}) {
 		return
 	}
 	s := fmt.Sprintf(f, v...)
-	doOutputWithPrefix(isProd,s,"error",logger)
+	doOutputWithPrefix(isProd, s, "error", logger)
 }
 
 // Error 错误
@@ -134,7 +134,7 @@ func Error(v ...interface{}) {
 		return
 	}
 	s := formatValue(v)
-	doOutputWithPrefix(isProd,s,"error",logger)
+	doOutputWithPrefix(isProd, s, "error", logger)
 }
 
 func getYearMonthDay() string {
@@ -181,7 +181,7 @@ func getCallerInfo() string {
 	return f + " " + strconv.Itoa(l) + " " + fn + " "
 }
 
-func doOutput(isProd bool,s string,l *log.Logger)  {
+func doOutput(isProd bool, s string, l *log.Logger) {
 	if isProd {
 		write2File("./logs/"+getYearMonthDay()+".log", s, l)
 	} else {
@@ -189,7 +189,7 @@ func doOutput(isProd bool,s string,l *log.Logger)  {
 	}
 }
 
-func doOutputWithPrefix(isProd bool,s,p string,l *log.Logger)  {
+func doOutputWithPrefix(isProd bool, s, p string, l *log.Logger) {
 	if isProd {
 		write2File("./logs/"+getYearMonthDay()+".log", "[ "+p+" ] "+s, l)
 	} else {
