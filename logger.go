@@ -12,7 +12,7 @@ import (
 )
 
 var logger *log.Logger
-var appName string
+var appName, logPath string
 var level int
 var isProd bool
 
@@ -24,6 +24,10 @@ func init() {
 // SetIsProd 设置是否生产环境
 func SetIsProd(prod bool) {
 	isProd = prod
+}
+
+func SetLogFilePath(path string) {
+	logPath = path
 }
 
 // SetAppName 设置app名称 日志打印的第一个
@@ -191,7 +195,11 @@ func doOutput(isProd bool, s string, l *log.Logger) {
 
 func doOutputWithPrefix(isProd bool, s, p string, l *log.Logger) {
 	if isProd {
-		write2File("./logs/"+getYearMonthDay()+".log", "[ "+p+" ] "+s, l)
+		if logPath != "" {
+			write2File(logPath+"/"+getYearMonthDay()+".log", "[ "+p+" ] "+s, l)
+		} else {
+			write2File("./logs/"+getYearMonthDay()+".log", "[ "+p+" ] "+s, l)
+		}
 	} else {
 		l.Output(3, "[ "+p+" ] "+s+"\n")
 	}
