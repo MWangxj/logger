@@ -12,7 +12,7 @@ import (
 )
 
 var logger *log.Logger
-var appName, logPath string
+var appName, logPath, fnPrefix string
 var level int
 var isProd bool
 
@@ -32,6 +32,7 @@ func SetLogFilePath(path string) {
 
 // SetAppName 设置app名称 日志打印的第一个
 func SetAppName(name string) {
+	fnPrefix = name
 	name = "[ " + name + " ] "
 	appName = name
 	logger.SetPrefix(name)
@@ -146,7 +147,7 @@ func getYearMonthDay() string {
 	y := n.Year()
 	m := n.Month()
 	d := n.Day()
-	return appName + strconv.Itoa(y) + month2string(m) + strconv.Itoa(d)
+	return fnPrefix + strconv.Itoa(y) + month2string(m) + strconv.Itoa(d)
 }
 
 func month2string(m time.Month) string {
