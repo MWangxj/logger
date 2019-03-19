@@ -197,9 +197,9 @@ func doOutput(isProd bool, s string, l *log.Logger) {
 func doOutputWithPrefix(isProd bool, s, p string, l *log.Logger) {
 	if isProd {
 		if logPath != "" {
-			write2File(logPath+"/"+getYearMonthDay()+".log", "[ "+p+" ] "+s, l)
+			write2File(logPath+"/"+getYearMonthDay()+"-"+p+".log", "[ "+p+" ] "+s, l)
 		} else {
-			write2File("./logs/"+getYearMonthDay()+".log", "[ "+p+" ] "+s, l)
+			write2File("./logs/"+getYearMonthDay()+"-"+p+".log", "[ "+p+" ] "+s, l)
 		}
 	} else {
 		l.Output(3, "[ "+p+" ] "+s+"\n")
